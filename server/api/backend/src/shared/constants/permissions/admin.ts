@@ -92,6 +92,30 @@ export const AdminPermissions = {
          },
          
       },
+      HelpArticle: {
+         Read: 'admin:helparticle:read',
+         Write: 'admin:helparticle:write',
+         Directory: {
+            Read: 'admin:helparticle.directory:read',
+         },
+         
+         Public: {
+            Read: 'admin:helparticle.public:read',
+         },
+         
+         Info: {
+            Write: 'admin:helparticle.info:write',
+         },
+         
+         Status: {
+            Write: 'admin:helparticle.status:write',
+         },
+         
+         Content: {
+            Write: 'admin:helparticle.content:write',
+         },
+         
+      },
       
    }
 } as const;
