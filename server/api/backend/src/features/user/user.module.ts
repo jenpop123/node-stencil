@@ -6,6 +6,7 @@ import { AuthController } from './auth/auth.controller';
 import { MediaController } from './media/media.controller';
 import { ProfileController } from './profile/profile.controller';
 import { WidgetsController } from './widget/widget.controller';
+import { HelpController } from './help/help.controller';
 
 @Module({
    imports: [AppConfigModule, EntitiesModule, StorageModule],
@@ -14,6 +15,7 @@ import { WidgetsController } from './widget/widget.controller';
       MediaController,
       ProfileController,
       WidgetsController,
+      HelpController,
    ],
 })
 export class UserModule {}

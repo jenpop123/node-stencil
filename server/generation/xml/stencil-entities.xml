@@ -229,6 +229,42 @@
       <entry>published_date</entry>
     </projection>
   </item>
+  <!-- HelpArticle: jurisdiction-authored help the signed-in user can list and read. -->
+  <item name="HelpArticle" friendlyName="Help Article" tenant="Isolated" useDocument="true" uiDisplayField="help_article_name" uiDefaultSort="sequence" accountDeletion="none">
+    <field type="Uuid" isNullable="false" friendlyName="Id">_id</field>
+    <field idAlias="true" type="Uuid" isNullable="false" friendlyName="Help Article Id">help_article_id</field>
+    <field type="string" isNullable="false" maxLength="10" tenant="true" foreignKey="Jurisdiction" foreignKeyField="_id" uiParent="true" friendlyName="Jurisdiction">jurisdiction_id</field>
+    <field type="string" isNullable="false" maxLength="200" perspective="Info" searchable="true" sortable="true" uiList="true" friendlyName="Help Article Name">help_article_name</field>
+    <field type="LocalizedText[]" isNullable="true" perspective="Info" isClass="true" recalculate="true" friendlyName="Help Article Name Localized">help_article_name_localized</field>
+    <field type="string" isNullable="false" maxLength="80" perspective="Info" forceLower="true" searchable="true" sortable="true" uiList="true" getForSingle="true" friendlyName="Help Article Slug">help_article_slug</field>
+    <field type="int" isNullable="false" perspective="Info" sortable="true" uiList="true" friendlyName="Sequence">sequence</field>
+    <field type="boolean" isNullable="false" perspective="Status" filter="true" uiList="true" friendlyName="Published">published</field>
+    <field type="ContentSection[]" isNullable="true" perspective="Content" isClass="true" friendlyName="Body">body</field>
+    <field type="LocalizedContent[]" isNullable="true" perspective="Content" isClass="true" recalculate="true" friendlyName="Body Localized">body_localized</field>
+    <uniquekey name="unique_slug">
+      <entry direction="Ascending">help_article_slug</entry>
+    </uniquekey>
+    <index name="by_published_sequence">
+      <entry direction="Ascending">published</entry>
+      <entry direction="Ascending">sequence</entry>
+    </index>
+    <projection name="Directory" search="true">
+      <entry>_id</entry>
+      <entry>help_article_id</entry>
+      <entry>help_article_name</entry>
+      <entry>help_article_slug</entry>
+      <entry>sequence</entry>
+    </projection>
+    <projection name="Public" get="true">
+      <entry>_id</entry>
+      <entry>jurisdiction_id</entry>
+      <entry>help_article_id</entry>
+      <entry>help_article_name</entry>
+      <entry>help_article_slug</entry>
+      <entry>sequence</entry>
+      <entry>body</entry>
+    </projection>
+  </item>
   <enum name="AccountStatus">
     <field value="-1">disabled</field>
     <field value="0">enabled</field>
@@ -313,6 +349,27 @@
       <field type="string" isNullable="true" friendlyName="Language" description="Language code. A matching translation replaces the default title and description. Otherwise those stored defaults are returned.">language_code</field>
     </entity>
     <query name="get" route="v1/widgets/get" post="true" request="params" requestType="WidgetReadRequest" itemResult="Widget.Public" />
+  </feature>
+  <feature name="help" area="user">
+    <entity name="HelpArticle.Directory" isItem="true"/>
+    <entity name="HelpArticle.Public" isItem="true"/>
+    <entity name="HelpArticleListRequest">
+      <field type="string" isNullable="true" friendlyName="Keyword" description="Optional search text matched against published help article names and slugs.">keyword</field>
+    </entity>
+    <entity name="HelpArticleReadRequest">
+      <field type="Uuid" friendlyName="Help Article" description="Id of the published help article to read.">help_article_id</field>
+      <field type="string" isNullable="true" friendlyName="Language" description="Language code. A matching translation replaces the default name and body. Otherwise those stored defaults are returned.">language_code</field>
+    </entity>
+    <query name="list" route="v1/help/list" post="true" request="params" requestType="HelpArticleListRequest" listResult="HelpArticle.Directory">
+      <mcp tool="help_list_articles" title="List help articles">
+        <description>List published help articles in the signed-in user's jurisdiction. Optional keyword filters the directory. Returns directory rows (id, name, slug, sequence), not article bodies.</description>
+      </mcp>
+    </query>
+    <query name="get" route="v1/help/get" post="true" request="params" requestType="HelpArticleReadRequest" itemResult="HelpArticle.Public">
+      <mcp tool="help_get_article" title="Get help article">
+        <description>Read one published help article by id. Optional language_code copies a matching translation onto the default name and body. Unpublished or unknown ids are not found. Returns the public article, not translation arrays.</description>
+      </mcp>
+    </query>
   </feature>
   <feature name="Task" area="admin">
     <mutation name="triggerInvalidateEverything" route="platform/tasks/invalidateall" />

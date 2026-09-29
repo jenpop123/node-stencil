@@ -50,6 +50,12 @@ const superCrudRoutes: Routes = [{
       authority: [],
    },
    {
+      key: 'superHelpArticle',
+      path: 'super/jurisdiction/:jurisdiction_id/helparticle',
+      component: lazy(() => import('@/views/super/crud/helparticle/HelpArticleList')),
+      authority: [],
+   },
+   {
       key: 'superJurisdictionAsset',
       path: 'super/jurisdiction/:jurisdiction_id/jurisdictionasset',
       component: lazy(() => import('@/views/super/crud/jurisdictionasset/JurisdictionAssetList')),

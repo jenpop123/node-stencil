@@ -175,3 +175,25 @@ export function itemSchema_Widget_Public(mode: McpSchemaMode): JsonSchema {
       published_date: schemaProperty(mode, { ...itemSchema_FullDate(mode), title: 'Published Date' }, true),
    }, ['_id', 'jurisdiction_id', 'title']);
 }
+
+export function itemSchema_HelpArticle_Directory(mode: McpSchemaMode): JsonSchema {
+   return objectSchema(mode, {
+      _id: schemaProperty(mode, { type: 'string', format: 'uuid', title: 'Id' }, false),
+      help_article_id: schemaProperty(mode, { type: 'string', format: 'uuid', title: 'Help Article Id' }, false),
+      help_article_name: schemaProperty(mode, { type: 'string', maxLength: 200, title: 'Help Article Name' }, false),
+      help_article_slug: schemaProperty(mode, { type: 'string', maxLength: 80, title: 'Help Article Slug' }, false),
+      sequence: schemaProperty(mode, { type: 'integer', title: 'Sequence' }, false),
+   }, ['_id', 'help_article_id', 'help_article_name', 'help_article_slug', 'sequence']);
+}
+
+export function itemSchema_HelpArticle_Public(mode: McpSchemaMode): JsonSchema {
+   return objectSchema(mode, {
+      _id: schemaProperty(mode, { type: 'string', format: 'uuid', title: 'Id' }, false),
+      jurisdiction_id: schemaProperty(mode, { type: 'string', maxLength: 10, title: 'Jurisdiction' }, false),
+      help_article_id: schemaProperty(mode, { type: 'string', format: 'uuid', title: 'Help Article Id' }, false),
+      help_article_name: schemaProperty(mode, { type: 'string', maxLength: 200, title: 'Help Article Name' }, false),
+      help_article_slug: schemaProperty(mode, { type: 'string', maxLength: 80, title: 'Help Article Slug' }, false),
+      sequence: schemaProperty(mode, { type: 'integer', title: 'Sequence' }, false),
+      body: schemaProperty(mode, { type: 'array', items: { ...itemSchema_ContentSection(mode) }, title: 'Body' }, true),
+   }, ['_id', 'help_article_id', 'jurisdiction_id', 'help_article_name', 'help_article_slug', 'sequence']);
+}

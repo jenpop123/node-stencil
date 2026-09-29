@@ -138,6 +138,8 @@ public static class Program
         {
             return path;
         }
+        // Config paths are authored with Windows separators; normalize before Combine on Linux/macOS.
+        path = path.Replace('\\', Path.DirectorySeparatorChar);
         if (Path.IsPathRooted(path))
         {
             return Path.GetFullPath(path);
