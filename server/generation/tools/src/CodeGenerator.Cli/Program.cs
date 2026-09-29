@@ -138,11 +138,14 @@ public static class Program
         {
             return path;
         }
-        if (Path.IsPathRooted(path))
+        // code-generator.config.xml stores Windows paths. On Linux, '\' is not a separator,
+        // so GetFullPath would not resolve '..\xml\...'. '/' works on both platforms.
+        string normalized = path.Replace('\\', '/');
+        if (Path.IsPathRooted(normalized))
         {
-            return Path.GetFullPath(path);
+            return Path.GetFullPath(normalized);
         }
-        return Path.GetFullPath(Path.Combine(baseDir, path));
+        return Path.GetFullPath(Path.Combine(baseDir, normalized));
     }
 
     static int RunFromConfig(FileInfo configFile, FileInfo dataFileOverride)

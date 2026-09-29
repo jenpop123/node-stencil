@@ -14,3 +14,11 @@ This repository contains `server/generation` (XML schema + generator) and `serve
 6. Hard safety rules always apply: body sanitization, jurisdiction from `request.account`, dual-homed `local_account_id`, tombstones, privacy logging, named contracts, additive schema, strict XML types.
 
 Long-form patterns: `server/api/ai/`. What Stencil gives you: `server/api/ai/enterprise-features.md`. Strict enforcement: `.cursor/rules/`. Optional practice track: `docs/training/`.
+
+## Cursor Cloud specific instructions
+
+The image provides Node.js 24 at `/usr/local/lib/nodejs/bin` and the .NET 8 SDK at `~/.dotnet`. Prepend both to `PATH` and set `DOTNET_ROOT=$HOME/.dotnet` before `npm` or `dotnet`. The default `node` on `PATH` can be older than `server/api/backend/package.json` `engines` (`>=23.4.0`).
+
+Local run matches `readme.md`: from `server/api`, `npm ci`, copy `backend/.env.example` and `frontend/.env.example` to `.env` when missing, then `npm start` (UI `:3000`, API `:3001`). Leave `SHARED_MONGO_URI` and Firebase blank so the API uses in-memory MongoDB and username `dev` / password `dev-secret`. Seed with `GET http://localhost:3001/api/platform/bootstrap` before the first sign-in. Build the generator with `server/generation/tools/src/build.sh`, then run `server/generation/tools/code-generator-cli` with no arguments. `code-generator.config.xml` stores Windows relative paths; the CLI normalizes `\` before resolving them. The config sets `WindowsLineEndings`, so a generation run can rewrite files as CRLF. Treat a huge generated-file diff as line endings unless `git diff --ignore-cr-at-eol` shows a real change.
+
+`server/api/backend/src/entities/fulldate/fulldate.utils.spec.ts` daylight-saving cases assume `TZ=America/New_York`. The rest of the unit tests and `npm run test:e2e` pass with `TZ=UTC`.
